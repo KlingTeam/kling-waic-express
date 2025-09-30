@@ -21,7 +21,7 @@ console.log(import.meta.env)
 
 // 兼容处理：优先 runtime 配置，fallback 到 Vite 编译时环境变量
 const baseURL =
-    window.APP_CONFIG?.API_SERVER_BASE_URL ||
+    (window.APP_CONFIG?.API_SERVER_BASE_URL !== '${API_SERVER_BASE_URL}' ? window.APP_CONFIG?.API_SERVER_BASE_URL : '') ||
     import.meta.env.VITE_API_SERVER_BASE_URL ||
     '/';
 
