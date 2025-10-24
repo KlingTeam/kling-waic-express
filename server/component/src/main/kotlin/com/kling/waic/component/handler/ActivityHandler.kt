@@ -61,7 +61,14 @@ class DefaultActivityHandler: ActivityHandler() {
         totalWidth: Int,
         totalHeight: Int
     ): Pair<BufferedImage, Graphics2D> {
-        val canvas = BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB)
+        val activity = ThreadContextUtils.getActivity()
+        val wallpaperImage =
+            FileUtils.getImageFromResources("KlingAI-sudoku-background-${activity}.png")
+        val canvas = if (wallpaperImage != null) {
+            ImageUtils.resizeAndCropToRatio(wallpaperImage, totalWidth, totalHeight)
+        } else {
+            BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB)
+        }
         val g2d: Graphics2D = canvas.createGraphics()
 
         g2d.color = Color.BLACK
@@ -76,8 +83,17 @@ class DefaultActivityHandler: ActivityHandler() {
         logoTopLeftX: Int,
         logoTopLeftY: Int
     ) {
-        val logoImage = FileUtils.convertFileAsImage("KlingAI-logo-$locale.png")
-        val logoWidth = (67.5 * scaleFactor).toInt()
+        val activity = ThreadContextUtils.getActivity()
+        val logoImage = FileUtils.convertFileAsImage(
+            "KlingAI-sudoku-logo-$locale-$activity.png",
+            "KlingAI-sudoku-logo-$locale-default.png",
+        )
+        val width = logoImage.getWidth(null)
+        val height = logoImage.getHeight(null)
+        val actualWidth: Double = 18.0 * width / height
+        log.info("actualWidth for corner logo: $actualWidth")
+
+        val logoWidth = (actualWidth * scaleFactor).toInt()
         val logoHeight = (18 * scaleFactor).toInt()
         val scaledLogoImage = logoImage.getScaledInstance(logoWidth, logoHeight, BufferedImage.SCALE_SMOOTH)
         g2d.drawImage(scaledLogoImage, logoTopLeftX, logoTopLeftY, null)
@@ -96,36 +112,10 @@ class DefaultActivityHandler: ActivityHandler() {
 @Component
 class XiaozhaoActivityHandler(
     private val styleImagePromptsForXiaozhao: List<String>
-): ActivityHandler() {
+): DefaultActivityHandler() {
 
     override fun activityName(): String {
         return "xiaozhao"
-    }
-
-    override fun getCanvas(
-        totalWidth: Int,
-        totalHeight: Int
-    ): Pair<BufferedImage, Graphics2D> {
-        val wallpaperImage =
-            FileUtils.getImageFromResources("Kuaishou-recruitment-background.png")
-        val canvas =
-            ImageUtils.resizeAndCropToRatio(wallpaperImage, totalWidth, totalHeight)
-        val g2d: Graphics2D = canvas.createGraphics()
-        return Pair(canvas, g2d)
-    }
-
-    override fun drawLogoInLeftCorner(
-        locale: Locale,
-        scaleFactor: Double,
-        g2d: Graphics2D,
-        logoTopLeftX: Int,
-        logoTopLeftY: Int
-    ) {
-        val logoImage = FileUtils.convertFileAsImage("Kuaishou-Kling-logo-CN.png")
-        val logoWidth = (200.4375 * scaleFactor).toInt()
-        val logoHeight = (18 * scaleFactor).toInt()
-        val scaledLogoImage = logoImage.getScaledInstance(logoWidth, logoHeight, BufferedImage.SCALE_SMOOTH)
-        g2d.drawImage(scaledLogoImage, logoTopLeftX, logoTopLeftY, null)
     }
 
     override fun getImageTaskMode(): ImageTaskMode {
@@ -145,26 +135,5 @@ class XiaozhaoActivityHandler(
         return surroundingPrompts.toMutableList().apply {
             add(middleIndex, centerPrompt)
         }
-    }
-}
-
-@Component
-class ZhuzhanTechActivityHandler: DefaultActivityHandler() {
-    override fun activityName(): String {
-        return "zhuzhantech"
-    }
-
-    override fun drawLogoInLeftCorner(
-        locale: Locale,
-        scaleFactor: Double,
-        g2d: Graphics2D,
-        logoTopLeftX: Int,
-        logoTopLeftY: Int
-    ) {
-        val logoImage = FileUtils.convertFileAsImage("ZhuzhanTech-Kling-logo-CN.png")
-        val logoWidth = (171.75 * scaleFactor).toInt()
-        val logoHeight = (18 * scaleFactor).toInt()
-        val scaledLogoImage = logoImage.getScaledInstance(logoWidth, logoHeight, BufferedImage.SCALE_SMOOTH)
-        g2d.drawImage(scaledLogoImage, logoTopLeftX, logoTopLeftY, null)
     }
 }

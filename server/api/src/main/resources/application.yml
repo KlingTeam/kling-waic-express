@@ -4,7 +4,7 @@ spring:
   config:
     import:
       - optional:classpath:application-env.properties
-      - optional:file:/app/application-env.properties
+      - optional:file:/app/config/application-env.properties
   mvc:
     servlet:
       path: /api

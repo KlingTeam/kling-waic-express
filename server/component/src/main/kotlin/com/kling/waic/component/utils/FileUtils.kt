@@ -14,7 +14,7 @@ class FileUtils {
         val BASE64_ENCODER: Base64.Encoder = Base64.getEncoder()
 
         fun readTextFromResources(filePath: String): String {
-            val absoluteFile = File("/app/$filePath")
+            val absoluteFile = File("/app/config/$filePath")
             if (absoluteFile.exists()) {
                 return absoluteFile.readText()
             }
@@ -23,6 +23,10 @@ class FileUtils {
         }
 
         fun readTextFromResourcesAsList(filePath: String): List<String> {
+            val absoluteFile = File("/app/config/$filePath")
+            if (absoluteFile.exists()) {
+                return absoluteFile.readLines()
+            }
             return readTextFromResources(filePath)
                 .split("\n")
                 .map { it.trim() }
@@ -32,29 +36,66 @@ class FileUtils {
         }
 
         fun getFileFromResources(filePath: String): File {
+            val absoluteFile = File("/app/config/$filePath")
+            if (absoluteFile.exists()) {
+                return absoluteFile
+            }
             val resource = this::class.java.classLoader.getResource(filePath)
                 ?: throw IllegalArgumentException("File not found: $filePath")
             return File(resource.toURI())
         }
 
-        fun getImageFromResources(filePath: String): BufferedImage {
+        fun getImageFromResources(filePath: String): BufferedImage? {
+            val absoluteFile = File("/app/config/$filePath")
+            if (absoluteFile.exists()) {
+                return ImageIO.read(absoluteFile)
+            }
             val resource = this::class.java.classLoader.getResourceAsStream(filePath)
-                ?: throw IllegalArgumentException("File not found: $filePath")
-            return resource.use { input ->
+            return resource?.use { input ->
                 ImageIO.read(input) ?: throw IOException("Unsupported image format: $filePath")
             }
         }
 
         fun readBytesFromResources(filePath: String): ByteArray {
+            val absoluteFile = File("/app/config/$filePath")
+            if (absoluteFile.exists()) {
+                return absoluteFile.readBytes()
+            }
             return this::class.java.classLoader.getResource(filePath)?.readBytes()
                 ?: throw IllegalArgumentException("File not found: $filePath")
         }
 
         fun convertImageToBase64(filePath: String): String {
+            val absoluteFile = File("/app/config/$filePath")
+            if (absoluteFile.exists()) {
+                return BASE64_ENCODER.encodeToString(absoluteFile.readBytes())
+            }
             val inputStream = this::class.java.classLoader.getResourceAsStream(filePath)
                 ?: throw IllegalArgumentException("File not found: $filePath")
             return inputStream.use { stream ->
                 BASE64_ENCODER.encodeToString(stream.readBytes())
+            }
+        }
+
+        fun convertFileAsImage(filePath: String, fallbackPath: String? = null): Image {
+            val image = doConvertFileAsImage(filePath)
+            if (image != null) {
+                return image
+            }
+            if (fallbackPath != null) {
+                return doConvertFileAsImage(fallbackPath)!!
+            }
+            throw IllegalArgumentException("File not found: $filePath")
+        }
+
+        fun doConvertFileAsImage(filePath: String): Image? {
+            val absoluteFile = File("/app/config/$filePath")
+            if (absoluteFile.exists()) {
+                return ImageIO.read(absoluteFile)
+            }
+            val inputStream = this::class.java.classLoader.getResourceAsStream(filePath)
+            return inputStream?.use { stream ->
+                ImageIO.read(stream) ?: throw IOException("Can't read input file!")
             }
         }
 
@@ -70,14 +111,6 @@ class FileUtils {
             val file = File.createTempFile("temp_image", ".jpg")
             ImageIO.write(bufferedImage, "jpg", file)
             return convertImageToBase64(file)
-        }
-
-        fun convertFileAsImage(filePath: String): Image {
-            val inputStream = this::class.java.classLoader.getResourceAsStream(filePath)
-                ?: throw IllegalArgumentException("File not found: $filePath")
-            return inputStream.use { stream ->
-                ImageIO.read(stream) ?: throw IOException("Can't read input file!")
-            }
         }
     }
 }

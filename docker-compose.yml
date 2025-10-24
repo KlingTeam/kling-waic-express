@@ -15,7 +15,7 @@ services:
     ports:
       - "8538:8538"
     volumes:
-      - ./application-env.properties:/app/application-env.properties
+      - ./config:/app/config
       - ./api_logs:/app/logs
     restart: always
     container_name: kling-express-api

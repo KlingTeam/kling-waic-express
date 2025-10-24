@@ -332,7 +332,7 @@ services:
     ports:
       - "8738:8538"
     volumes:
-      - ./application-env.properties:/app/application-env.properties
+      - ./config:/app/config
       - ./api_logs:/app/logs
     restart: always
     container_name: kling-express-api
@@ -385,6 +385,7 @@ sh create_app_bundled.sh
 - Use Cloudflare free CDN and SSL services
 - Or use Nginx reverse proxy + Let's Encrypt free certificates
 
+# todo:
 ### 9.6 Custom Configuration
 
 Customize styles and effects by mounting custom configuration files:

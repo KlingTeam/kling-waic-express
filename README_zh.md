@@ -332,7 +332,7 @@ services:
     ports:
       - "8738:8538"
     volumes:
-      - ./application-env.properties:/app/application-env.properties
+      - ./config:/app/config
       - ./api_logs:/app/logs
     restart: always
     container_name: kling-express-api
@@ -387,6 +387,7 @@ sh create_app_bundled.sh
 
 ### 9.6 自定义配置
 
+# todo: 
 可通过挂载自定义配置文件来定制风格和特效：
 
 ```yaml

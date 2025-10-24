@@ -1,5 +1,6 @@
 package com.kling.waic.component.utils
 
+import com.kling.waic.component.utils.Constants.DEFAULT_ACTIVITY
 import org.slf4j.MDC
 
 object ThreadContextUtils {
@@ -10,7 +11,7 @@ object ThreadContextUtils {
     }
 
     fun getActivity(): String {
-        return MDC.get(ACTIVITY) ?: ""
+        return MDC.get(ACTIVITY) ?: DEFAULT_ACTIVITY
     }
 }
 
