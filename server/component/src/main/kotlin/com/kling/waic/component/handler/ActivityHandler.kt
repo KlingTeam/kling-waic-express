@@ -48,9 +48,10 @@ abstract class ActivityHandler {
 }
 
 @Component
-class DefaultActivityHandler(
-    private val styleImagePrompts: List<String>,
-): ActivityHandler() {
+class DefaultActivityHandler: ActivityHandler() {
+
+    @Autowired
+    private lateinit var styleImagePrompts: List<String>
 
     override fun activityName(): String {
         return Constants.DEFAULT_ACTIVITY
@@ -144,5 +145,26 @@ class XiaozhaoActivityHandler(
         return surroundingPrompts.toMutableList().apply {
             add(middleIndex, centerPrompt)
         }
+    }
+}
+
+@Component
+class ZhuzhanTechActivityHandler: DefaultActivityHandler() {
+    override fun activityName(): String {
+        return "zhuzhantech"
+    }
+
+    override fun drawLogoInLeftCorner(
+        locale: Locale,
+        scaleFactor: Double,
+        g2d: Graphics2D,
+        logoTopLeftX: Int,
+        logoTopLeftY: Int
+    ) {
+        val logoImage = FileUtils.convertFileAsImage("ZhuzhanTech-Kling-logo-CN.png")
+        val logoWidth = (171.75 * scaleFactor).toInt()
+        val logoHeight = (18 * scaleFactor).toInt()
+        val scaledLogoImage = logoImage.getScaledInstance(logoWidth, logoHeight, BufferedImage.SCALE_SMOOTH)
+        g2d.drawImage(scaledLogoImage, logoTopLeftX, logoTopLeftY, null)
     }
 }
