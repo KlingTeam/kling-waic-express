@@ -9,4 +9,6 @@ gradle
 gradlew
 gradlew.bat
 bin
-/src/main/resources/application-env.properties
+api/src/main/resources/application-env.properties
+printer/src/main/resources/application-env.properties
+component/src/main/resources/application-env.properties

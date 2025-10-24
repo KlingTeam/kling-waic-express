@@ -8,3 +8,6 @@ dist
 .env.local
 .kotlinc/
 .kotlin/
+api/src/main/resources/application-env.properties
+printer/src/main/resources/application-env.properties
+component/src/main/resources/application-env.properties
