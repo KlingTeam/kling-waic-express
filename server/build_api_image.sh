@@ -1,6 +1,5 @@
 #!/bin/sh
 
-docker build -t kling-express-api .
 docker build -f api/Dockerfile -t kling-express-api .
 
 docker login
