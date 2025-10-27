@@ -91,7 +91,7 @@ class DefaultActivityHandler: ActivityHandler() {
         val width = logoImage.getWidth(null)
         val height = logoImage.getHeight(null)
         val actualWidth: Double = 18.0 * width / height
-        log.info("actualWidth for corner logo: $actualWidth")
+        log.debug("actualWidth for corner logo: $actualWidth")
 
         val logoWidth = (actualWidth * scaleFactor).toInt()
         val logoHeight = (18 * scaleFactor).toInt()

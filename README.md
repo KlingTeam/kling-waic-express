@@ -385,18 +385,35 @@ sh create_app_bundled.sh
 - Use Cloudflare free CDN and SSL services
 - Or use Nginx reverse proxy + Let's Encrypt free certificates
 
-# todo:
 ### 9.6 Custom Configuration
+
+#### 9.6.1 Custom Styles and Effects
 
 Customize styles and effects by mounting custom configuration files:
 
-```yaml
-api:
-  image: akang943578/kling-express-api:latest
-  volumes:
-    - ./style-image-prompts.txt:/app/style-image-prompts.txt      # Custom style image prompts
-    - ./video-special-effects.txt:/app/video-special-effects.txt  # Custom video effects
+**Method: Configuration Directory**
+Add configuration files in the `./config` directory:
+- `style-image-prompts.txt` - Style restyle prompts
+- `video-special-effects.txt` - Video effects configuration
+
+#### 9.6.2 Multi-Activity Configuration
+
+**Adding New Activity:**
+Configure new activity in `./config/application-env.properties` file, for example activity named `zhuzhantech`:
+
+```properties
+config.activity.map[zhuzhantech].token=MANAGE_TOKEN_FOR_NEW_ACTIVITY
+config.activity.map[zhuzhantech].accessKey=ACCESS_KEY_FOR_NEW_ACTIVITY
+config.activity.map[zhuzhantech].secretKey=SECRET_KEY_FOR_NEW_ACTIVITY
 ```
+
+**[Optional] Custom Activity Assets:**
+Add activity-specific images in the `./config` directory:
+
+| Filename | Purpose |
+|----------|---------|
+| `KlingAI-sudoku-background-zhuzhantech.png` | 9-grid photo background |
+| `KlingAI-sudoku-logo-CN-zhuzhantech.png` | 9-grid bottom-left logo |
 
 > 📚 **Configuration Format:** Please refer to Kling API Open Platform documentation
 

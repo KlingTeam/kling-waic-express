@@ -387,16 +387,33 @@ sh create_app_bundled.sh
 
 ### 9.6 自定义配置
 
-# todo: 
+#### 9.6.1 自定义风格和特效
+
 可通过挂载自定义配置文件来定制风格和特效：
 
-```yaml
-api:
-  image: akang943578/kling-express-api:latest
-  volumes:
-    - ./style-image-prompts.txt:/app/style-image-prompts.txt      # 自定义风格化图片 prompts
-    - ./video-special-effects.txt:/app/video-special-effects.txt  # 自定义特效 effects
+**方法：配置目录**
+在 `./config` 目录下添加配置文件：
+- `style-image-prompts.txt` - 风格转绘提示词
+- `video-special-effects.txt` - 视频特效配置
+
+#### 9.6.2 多活动配置
+
+**添加新活动：**
+在 `./config/application-env.properties` 文件中配置新活动，例如活动名为 `zhuzhantech`：
+
+```properties
+config.activity.map[zhuzhantech].token=MANAGE_TOKEN_FOR_NEW_ACTIVITY
+config.activity.map[zhuzhantech].accessKey=ACCESS_KEY_FOR_NEW_ACTIVITY
+config.activity.map[zhuzhantech].secretKey=SECRET_KEY_FOR_NEW_ACTIVITY
 ```
+
+**[可选] 自定义活动素材**
+在 `./config` 目录下添加活动专属图片：
+
+| 文件名 | 用途 |
+|--------|------|
+| `KlingAI-sudoku-background-zhuzhantech.png` | 九宫格相片背景图 |
+| `KlingAI-sudoku-logo-CN-zhuzhantech.png` | 九宫格左下角 Logo |
 
 > 📚 **配置格式：** 请参考可灵 API 开放平台文档
 
