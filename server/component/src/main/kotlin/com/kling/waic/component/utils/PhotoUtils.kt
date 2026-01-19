@@ -105,6 +105,6 @@ object PhotoUtils {
     fun generateTempPdfPath(printings: List<Printing>): String {
         val timestamp = System.currentTimeMillis()
         val names = printings.take(2).joinToString("-") { it.name }
-        return "temp_pdf_${names}_${timestamp}.pdf"
+        return "/tmp/temp_pdf_${names}_${timestamp}.pdf"
     }
 }
