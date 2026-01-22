@@ -1,5 +1,5 @@
 # 构建阶段
-FROM openjdk:17-jdk-slim AS builder
+FROM eclipse-temurin:17-jdk-jammy AS builder
 
 # 安装必要的系统库和工具
 RUN apt-get update && apt-get install -y \
@@ -35,7 +35,7 @@ COPY api/src api/src
 RUN mvn clean package -DskipTests -P api
 
 # 运行阶段
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 
 # 安装 bytedeco OpenCV 运行时必需库
 RUN apt-get update && apt-get install -y \
