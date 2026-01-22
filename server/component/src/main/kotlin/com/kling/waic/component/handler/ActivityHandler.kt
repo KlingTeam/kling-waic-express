@@ -41,6 +41,7 @@ abstract class ActivityHandler {
             FileUtils.readTextFromResourcesAsList("style-image-prompts.txt")
         }
         val taskN = getImageTaskMode().taskN
+        log.info("getPrompts taskMode: ${getImageTaskMode().name}, taskN: ${taskN}")
         return styleImagePrompts.shuffled().take(taskN)
     }
 

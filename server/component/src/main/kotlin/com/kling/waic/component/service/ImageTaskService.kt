@@ -43,6 +43,7 @@ class ImageTaskService(
         val activityHandler = activityHandlerSelector.selectActivityHandler()
         val imageTaskMode = activityHandler.getImageTaskMode()
         val prompts = activityHandler.getPrompts(ThreadContextUtils.getActivity())
+        log.info("doCreateTask prompts.size: ${prompts.size}")
         val taskN = imageTaskMode.taskN
 
         // 因为 executeWithLock 是同步方法，所以这里只能用 runBlocking 包住挂起逻辑
