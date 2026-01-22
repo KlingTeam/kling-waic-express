@@ -11,18 +11,20 @@ import com.kling.waic.component.external.model.KlingOpenAPITaskStatus
 import com.kling.waic.component.external.model.QueryTaskContext
 import com.kling.waic.component.external.model.QueryVideoTaskRequest
 import com.kling.waic.component.helper.VideoResizeHelper
+import com.kling.waic.component.utils.FileUtils
 import com.kling.waic.component.utils.ObjectMapperUtils
 import com.kling.waic.component.utils.Slf4j.Companion.log
+import com.kling.waic.component.utils.ThreadContextUtils
 import org.springframework.stereotype.Service
 
 @Service
 class VideoTaskService(
-    private val videoSpecialEffects: List<String>,
     private val klingOpenAPIClient: KlingOpenAPIClient,
     private val videoResizeHelper: VideoResizeHelper
 ) : TaskService() {
 
     override suspend fun doCreateTask(requestImageUrl: String): List<OpenApiRecord> {
+        val videoSpecialEffects = getSpecialEffects(ThreadContextUtils.getActivity())
         val effectScene = videoSpecialEffects.random()
         val request = CreateVideoTaskRequest(
             effectScene = effectScene,
@@ -91,6 +93,15 @@ class VideoTaskService(
             KlingOpenAPITaskStatus.processing -> TaskStatus.PROCESSING
             KlingOpenAPITaskStatus.succeed -> TaskStatus.SUCCEED
             KlingOpenAPITaskStatus.failed -> TaskStatus.FAILED
+        }
+    }
+
+    private fun getSpecialEffects(activity: String): List<String> {
+        return try {
+            FileUtils.readTextFromResourcesAsList("video-special-effects-${activity}.txt")
+        } catch (e: Exception) {
+            log.info("getSpecialEffects for specific activity: $activity error, message: ${e.message}")
+            FileUtils.readTextFromResourcesAsList("video-special-effects.txt")
         }
     }
 }

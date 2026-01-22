@@ -14,6 +14,7 @@ import com.kling.waic.component.repository.TaskRepository
 import com.kling.waic.component.selector.ActivityHandlerSelector
 import com.kling.waic.component.utils.ObjectMapperUtils
 import com.kling.waic.component.utils.Slf4j.Companion.log
+import com.kling.waic.component.utils.ThreadContextUtils
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -41,7 +42,7 @@ class ImageTaskService(
     override suspend fun doCreateTask(requestImageUrl: String): List<OpenApiRecord> {
         val activityHandler = activityHandlerSelector.selectActivityHandler()
         val imageTaskMode = activityHandler.getImageTaskMode()
-        val prompts = activityHandler.getPrompts()
+        val prompts = activityHandler.getPrompts(ThreadContextUtils.getActivity())
         val taskN = imageTaskMode.taskN
 
         // 因为 executeWithLock 是同步方法，所以这里只能用 runBlocking 包住挂起逻辑

@@ -1,5 +1,6 @@
 package com.kling.waic.component.utils
 
+import com.kling.waic.component.utils.Slf4j.Companion.log
 import org.springframework.web.multipart.MultipartFile
 import java.awt.Image
 import java.awt.image.BufferedImage
@@ -16,17 +17,15 @@ class FileUtils {
         fun readTextFromResources(filePath: String): String {
             val absoluteFile = File("/app/config/$filePath")
             if (absoluteFile.exists()) {
+                log.info("readTextFromResources from absoluteFile exists: $absoluteFile")
                 return absoluteFile.readText()
             }
+//            log.info("readTextFromResources, from resource, filePath: $filePath")
             return this::class.java.classLoader.getResource(filePath)?.readText()
                 ?: throw IllegalArgumentException("File not found: $filePath")
         }
 
         fun readTextFromResourcesAsList(filePath: String): List<String> {
-            val absoluteFile = File("/app/config/$filePath")
-            if (absoluteFile.exists()) {
-                return absoluteFile.readLines()
-            }
             return readTextFromResources(filePath)
                 .split("\n")
                 .map { it.trim() }
@@ -38,6 +37,7 @@ class FileUtils {
         fun getFileFromResources(filePath: String): File {
             val absoluteFile = File("/app/config/$filePath")
             if (absoluteFile.exists()) {
+                log.info("getFileFromResources from absoluteFile exists: $absoluteFile")
                 return absoluteFile
             }
             val resource = this::class.java.classLoader.getResource(filePath)
@@ -48,8 +48,10 @@ class FileUtils {
         fun getImageFromResources(filePath: String): BufferedImage? {
             val absoluteFile = File("/app/config/$filePath")
             if (absoluteFile.exists()) {
+                log.info("getImageFromResources from absoluteFile exists: $absoluteFile")
                 return ImageIO.read(absoluteFile)
             }
+//            log.info("getImageFromResources, from resource, filePath: $filePath")
             val resource = this::class.java.classLoader.getResourceAsStream(filePath)
             return resource?.use { input ->
                 ImageIO.read(input) ?: throw IOException("Unsupported image format: $filePath")
@@ -91,6 +93,7 @@ class FileUtils {
         fun doConvertFileAsImage(filePath: String): Image? {
             val absoluteFile = File("/app/config/$filePath")
             if (absoluteFile.exists()) {
+                log.info("doConvertFileAsImage from absoluteFile exists: $absoluteFile")
                 return ImageIO.read(absoluteFile)
             }
             val inputStream = this::class.java.classLoader.getResourceAsStream(filePath)

@@ -103,35 +103,14 @@ open class ServiceConfig(
     }
 
     @Bean
-    open fun styleImagePrompts(): List<String> {
-        return FileUtils.readTextFromResourcesAsList("style-image-prompts.txt")
-    }
-
-    @Bean
-    open fun styleImagePromptsForXiaozhao(): List<String> {
-        return FileUtils.readTextFromResourcesAsList("style-image-prompts-xiaozhao.txt")
-    }
-
-    @Bean
-    open fun videoSpecialEffects(): List<String> {
-        return FileUtils.readTextFromResourcesAsList("video-special-effects.txt")
-    }
-
-    @Bean
     open fun nextCodeLuaScript(): String {
         return FileUtils.readTextFromResources("next-code.lua")
     }
 
     @Bean
-//    @ConditionalOnProperty(
-//        name = ["WAIC_CROP_IMAGE_WITH_OPENCV"],
-//        havingValue = "true",
-//        matchIfMissing = true
-//    )
     open fun loadCascadeClassifiersFromResources(): List<CascadeClassifier> {
         Loader.load(opencv_java::class.java)
-//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME)
-        
+
         // Try to load multiple classifiers in order of priority
         val classifierFiles = listOf(
             "haarcascade_frontalface_default.xml",

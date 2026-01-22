@@ -33,7 +33,14 @@ abstract class ActivityHandler {
 
     abstract fun getImageTaskMode(): ImageTaskMode
 
-    abstract fun getPrompts(): List<String>
+    open fun getPrompts(activity: String): List<String> {
+        return try {
+            FileUtils.readTextFromResourcesAsList("stype-image-prompts-${activity}.txt")
+        } catch (e: Exception) {
+            log.info("getPrompts for specific activity: $activity error, message: ${e.message}")
+            FileUtils.readTextFromResourcesAsList("stype-image-prompts.txt")
+        }
+    }
 
     fun getAksk(): Pair<String, String> {
         val activity = ThreadContextUtils.getActivity()
@@ -50,9 +57,6 @@ abstract class ActivityHandler {
 @Component
 class DefaultActivityHandler: ActivityHandler() {
 
-    @Autowired
-    private lateinit var styleImagePrompts: List<String>
-
     override fun activityName(): String {
         return Constants.DEFAULT_ACTIVITY
     }
@@ -64,9 +68,11 @@ class DefaultActivityHandler: ActivityHandler() {
         val activity = ThreadContextUtils.getActivity()
         val wallpaperImage =
             FileUtils.getImageFromResources("KlingAI-sudoku-background-${activity}.png")
+        log.info("wallpaperImage for $activity: $wallpaperImage")
         val canvas = if (wallpaperImage != null) {
             ImageUtils.resizeAndCropToRatio(wallpaperImage, totalWidth, totalHeight)
         } else {
+            log.info("not found specific wallpaperImage for $activity, using default wallpaper")
             BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB)
         }
         val g2d: Graphics2D = canvas.createGraphics()
@@ -102,17 +108,10 @@ class DefaultActivityHandler: ActivityHandler() {
     override fun getImageTaskMode(): ImageTaskMode {
         return ImageTaskMode.WITH_ORIGIN
     }
-
-    override fun getPrompts(): List<String> {
-        val taskN = getImageTaskMode().taskN
-        return styleImagePrompts.shuffled().take(taskN)
-    }
 }
 
 @Component
-class XiaozhaoActivityHandler(
-    private val styleImagePromptsForXiaozhao: List<String>
-): DefaultActivityHandler() {
+class XiaozhaoActivityHandler: DefaultActivityHandler() {
 
     override fun activityName(): String {
         return "xiaozhao"
@@ -122,7 +121,9 @@ class XiaozhaoActivityHandler(
         return ImageTaskMode.ALL_GENERATED_FIXED_CENTER
     }
 
-    override fun getPrompts(): List<String> {
+    override fun getPrompts(activity: String): List<String> {
+        val styleImagePromptsForXiaozhao =
+            FileUtils.readTextFromResourcesAsList("stype-image-prompts-${activity}.txt")
         log.debug("prompts for xiaozhao: ${styleImagePromptsForXiaozhao}")
 
         val taskN = getImageTaskMode().taskN
