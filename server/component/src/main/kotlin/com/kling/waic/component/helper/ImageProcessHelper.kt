@@ -208,7 +208,7 @@ class ImageProcessHelper(
     }
 
     // check the logic
-    private fun createKlingWAICSudokuImage(
+    fun createKlingWAICSudokuImage(
         taskName: String,
         images: List<BufferedImage>,
         locale: Locale

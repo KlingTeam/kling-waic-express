@@ -72,17 +72,21 @@ class DefaultActivityHandler: ActivityHandler() {
         val wallpaperImage =
             FileUtils.getImageFromResources("KlingAI-sudoku-background-${activity}.png")
         log.info("wallpaperImage for $activity: $wallpaperImage")
-        val canvas = if (wallpaperImage != null) {
-            ImageUtils.resizeAndCropToRatio(wallpaperImage, totalWidth, totalHeight)
+        val pair = if (wallpaperImage != null) {
+            val canvas = ImageUtils.resizeAndCropToRatio(wallpaperImage, totalWidth, totalHeight)
+            val g2d: Graphics2D = canvas.createGraphics()
+            Pair(canvas, g2d)
         } else {
             log.info("not found specific wallpaperImage for $activity, using default wallpaper")
-            BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB)
-        }
-        val g2d: Graphics2D = canvas.createGraphics()
+            val canvas = BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB)
 
-        g2d.color = Color.BLACK
-        g2d.fillRect(0, 0, totalWidth, totalHeight)
-        return Pair(canvas, g2d)
+            val g2d: Graphics2D = canvas.createGraphics()
+            g2d.color = Color.BLACK
+            g2d.fillRect(0, 0, totalWidth, totalHeight)
+
+            Pair(canvas, g2d)
+        }
+        return pair
     }
 
     override fun drawLogoInLeftCorner(
