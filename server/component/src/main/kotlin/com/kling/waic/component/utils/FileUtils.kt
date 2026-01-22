@@ -20,7 +20,7 @@ class FileUtils {
                 log.info("readTextFromResources from absoluteFile exists: $absoluteFile")
                 return absoluteFile.readText()
             }
-//            log.info("readTextFromResources, from resource, filePath: $filePath")
+            log.info("readTextFromResources, from resource, filePath: $filePath")
             return this::class.java.classLoader.getResource(filePath)?.readText()
                 ?: throw IllegalArgumentException("File not found: $filePath")
         }
@@ -40,6 +40,7 @@ class FileUtils {
                 log.info("getFileFromResources from absoluteFile exists: $absoluteFile")
                 return absoluteFile
             }
+            log.info("getFileFromResources, from resource, filePath: $filePath")
             val resource = this::class.java.classLoader.getResource(filePath)
                 ?: throw IllegalArgumentException("File not found: $filePath")
             return File(resource.toURI())
@@ -51,7 +52,7 @@ class FileUtils {
                 log.info("getImageFromResources from absoluteFile exists: $absoluteFile")
                 return ImageIO.read(absoluteFile)
             }
-//            log.info("getImageFromResources, from resource, filePath: $filePath")
+            log.info("getImageFromResources, from resource, filePath: $filePath")
             val resource = this::class.java.classLoader.getResourceAsStream(filePath)
             return resource?.use { input ->
                 ImageIO.read(input) ?: throw IOException("Unsupported image format: $filePath")
@@ -96,6 +97,7 @@ class FileUtils {
                 log.info("doConvertFileAsImage from absoluteFile exists: $absoluteFile")
                 return ImageIO.read(absoluteFile)
             }
+            log.info("doConvertFileAsImage, from resource, filePath: $filePath")
             val inputStream = this::class.java.classLoader.getResourceAsStream(filePath)
             return inputStream?.use { stream ->
                 ImageIO.read(stream) ?: throw IOException("Can't read input file!")
