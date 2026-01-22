@@ -20,8 +20,8 @@ class ImageProcessHelperTest: SpringBaseTest() {
     @Test
     fun test() {
 //        ThreadContextUtils.putActivity("yuanshi")
-        ThreadContextUtils.putActivity("guanghe")
-//        ThreadContextUtils.putActivity("xiaozhao")
+//        ThreadContextUtils.putActivity("guanghe")
+        ThreadContextUtils.putActivity("xiaozhao")
 
         val taskName = "testTask"
         val imageResource = FileUtils.getImageFromResources("test_girl.png")!!
