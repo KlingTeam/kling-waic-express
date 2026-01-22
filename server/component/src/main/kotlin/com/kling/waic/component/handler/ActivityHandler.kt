@@ -34,12 +34,14 @@ abstract class ActivityHandler {
     abstract fun getImageTaskMode(): ImageTaskMode
 
     open fun getPrompts(activity: String): List<String> {
-        return try {
+        val styleImagePrompts = try {
             FileUtils.readTextFromResourcesAsList("style-image-prompts-${activity}.txt")
         } catch (e: Exception) {
             log.info("getPrompts for specific activity: $activity error, message: ${e.message}")
             FileUtils.readTextFromResourcesAsList("style-image-prompts.txt")
         }
+        val taskN = getImageTaskMode().taskN
+        return styleImagePrompts.shuffled().take(taskN)
     }
 
     fun getAksk(): Pair<String, String> {
