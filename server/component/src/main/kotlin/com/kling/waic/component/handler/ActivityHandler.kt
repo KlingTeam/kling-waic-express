@@ -35,10 +35,10 @@ abstract class ActivityHandler {
 
     open fun getPrompts(activity: String): List<String> {
         return try {
-            FileUtils.readTextFromResourcesAsList("stype-image-prompts-${activity}.txt")
+            FileUtils.readTextFromResourcesAsList("style-image-prompts-${activity}.txt")
         } catch (e: Exception) {
             log.info("getPrompts for specific activity: $activity error, message: ${e.message}")
-            FileUtils.readTextFromResourcesAsList("stype-image-prompts.txt")
+            FileUtils.readTextFromResourcesAsList("style-image-prompts.txt")
         }
     }
 
@@ -123,7 +123,7 @@ class XiaozhaoActivityHandler: DefaultActivityHandler() {
 
     override fun getPrompts(activity: String): List<String> {
         val styleImagePromptsForXiaozhao =
-            FileUtils.readTextFromResourcesAsList("stype-image-prompts-${activity}.txt")
+            FileUtils.readTextFromResourcesAsList("style-image-prompts-${activity}.txt")
         log.debug("prompts for xiaozhao: ${styleImagePromptsForXiaozhao}")
 
         val taskN = getImageTaskMode().taskN
