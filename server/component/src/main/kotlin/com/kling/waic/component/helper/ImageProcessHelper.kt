@@ -279,9 +279,9 @@ class ImageProcessHelper(
         val maxX = totalWidth - textRightMargin
         
         // Ensure text does not exceed maximum width
-        val drawX = minOf(taskNameTopLeftX, (maxX - textBounds.width).toInt())
+//        val drawX = minOf(taskNameTopLeftX, (maxX - textBounds.width).toInt())
         
-        g2d.drawString(taskName, drawX, taskNameTopLeftY)
+//        g2d.drawString(taskName, drawX, taskNameTopLeftY)
         
         g2d.dispose()
         return canvas
